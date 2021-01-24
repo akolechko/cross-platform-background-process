@@ -3,6 +3,7 @@
 #include "servicehandler.h"
 #include "utils.h"
 
+#ifdef WIN32
 class ServiceHandle
 {
 public:
@@ -283,3 +284,4 @@ bool ServiceHandler::Run() const
 {
     return m_service->Run();
 }
+#endif

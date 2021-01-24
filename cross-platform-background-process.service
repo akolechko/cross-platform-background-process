@@ -1,0 +1,9 @@
+[Unit]
+Description=Simple daemon template
+After=network.target
+
+[Service]
+ExecStart=/home/akolechko/dev/akolechko/cross-platform-background-process/bin/process
+
+[Install]
+WantedBy=multi-user.target

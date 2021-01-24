@@ -1,6 +1,22 @@
 #pragma once
 
 #include <iostream>
-#include <atlstr.h>
 #include <cassert>
 #include <thread>
+
+#ifdef WIN32
+#include <atlstr.h>
+#endif
+
+#ifdef linux
+#include <cstring>
+#include <csignal>
+
+#include <iostream>
+#include <errno.h>
+#include <string.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#endif

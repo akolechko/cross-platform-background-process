@@ -2,13 +2,15 @@
 
 #include "service.h"
 
+Service* Service::m_service = nullptr;
+
+#ifdef WIN32
 #pragma comment(lib, "Ws2_32.lib")
 #pragma comment(lib, "Wtsapi32.lib")
 
 #define DEFAULT_BUFLEN 512
 #define DEFAULT_PORT "27015"
 
-Service* Service::m_service = nullptr;
 
 Service::Service(const ServiceParameters& parameters)
   : m_name(parameters.name),
@@ -122,3 +124,73 @@ void Service::Stop()
     OnStop();
     SetStatus(SERVICE_STOPPED);
 }
+#elif linux
+Service::Service()
+  : m_isRunning(true)
+{
+    signal(SIGTERM, Service::SignalHandler);
+}
+
+bool Service::IsRunning() 
+{
+    return m_isRunning;
+}
+
+void Service::SignalHandler(int signal) 
+{
+    switch (signal) 
+    {
+        case SIGTERM:
+            m_service->m_isRunning = false;
+            break;
+    }
+}
+
+bool Service::Run()
+{     
+    int listenPort = 1234;
+ 
+    // Create a socket
+    int s0 = socket(AF_INET, SOCK_STREAM, 0);
+ 
+    // Fill in the address structure containing self address
+    struct sockaddr_in myaddr;
+    memset(&myaddr, 0, sizeof(struct sockaddr_in));
+    myaddr.sin_family = AF_INET;
+    myaddr.sin_port = htons(listenPort);        // Port to listen
+    myaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+ 
+    // Bind a socket to the address
+    int res = bind(s0, (struct sockaddr*) &myaddr, sizeof(myaddr));
+ 
+    // Set the "LINGER" timeout to zero, to close the listen socket
+    // immediately at program termination.
+    struct linger linger_opt = { 1, 0 }; // Linger active, timeout 0
+    setsockopt(s0, SOL_SOCKET, SO_LINGER, &linger_opt, sizeof(linger_opt));
+ 
+    // Now, listen for a connection
+    res = listen(s0, 1);    // "1" is the maximal length of the queue
+ 
+    // Accept a connection (the "accept" command waits for a connection with
+    // no timeout limit...)
+    struct sockaddr_in peeraddr;
+    socklen_t peeraddr_len;
+    int s1 = accept(s0, (struct sockaddr*) &peeraddr, &peeraddr_len);
+ 
+    // A connection is accepted. The new socket "s1" is created
+    // for data input/output. The peeraddr structure is filled in with
+    // the address of connected entity, print it.
+ 
+    res = close(s0);    // Close the listen socket
+ 
+    write(s1, "Hello!\r\n", 8);
+ 
+    char buffer[1024];
+    res = read(s1, buffer, 1023);
+    buffer[res] = 0;
+ 
+    close(s1); 
+    return true;
+}
+
+#endif

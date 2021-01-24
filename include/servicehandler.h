@@ -2,6 +2,7 @@
 
 #include "service.h"
 
+#ifdef WIN32
 class ServiceHandler
 {
 public:
@@ -26,3 +27,4 @@ private:
 private:
 	std::unique_ptr<Service> m_service;
 };
+#endif

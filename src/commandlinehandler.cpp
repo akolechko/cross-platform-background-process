@@ -12,6 +12,7 @@ CommandLineHandler::CommandLineHandler(int argc, char** argv)
 
 bool CommandLineHandler::Parse()
 {
+#ifdef WIN32
     ServiceParameters parameters;
     auto service = std::make_unique<Service>(parameters);
     auto service_handler = std::make_unique<ServiceHandler>(std::move(service));
@@ -53,4 +54,32 @@ bool CommandLineHandler::Parse()
     while (false);
 
     return success;
+#elif linux
+    auto service = std::make_unique<Service>();
+    bool success = true;
+
+    do
+    {
+        if (m_argc == 1)
+        {
+            success = service->Run();
+            break;
+        }
+
+        if (m_argc == 2)
+        {
+            if (strcmp(m_argv[1], "help") == 0)
+            {
+                Utils::DisplayHelp();
+                break;
+            }
+        }
+        
+        Utils::DisplayMessage("Invalid parameters");
+        Utils::DisplayHelp();
+    }
+    while (false);
+
+    return success;
+#endif
 }
