@@ -2,7 +2,7 @@
 
 #include "utils.h"
 
-#ifdef WIN32
+#ifdef _WIN64
 #define EN_US 0x0409
 
 void Utils::DisplayError(const std::string& message)
@@ -30,7 +30,7 @@ void Utils::DisplayError(const std::string& message)
 
 void Utils::DisplayHelp()
 {
-#ifdef WIN32
+#ifdef _WIN64
 	std::cout << "\nUsage:\n"
 				 "Enter \"install\" to install and start the service.\n"
 				 "Enter \"uninstall\" to stop and delete the service.\n"

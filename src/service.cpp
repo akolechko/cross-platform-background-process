@@ -4,7 +4,7 @@
 
 Service* Service::m_service = nullptr;
 
-#ifdef WIN32
+#ifdef _WIN64
 #pragma comment(lib, "Ws2_32.lib")
 #pragma comment(lib, "Wtsapi32.lib")
 

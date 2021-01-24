@@ -4,7 +4,7 @@
 #include <cassert>
 #include <thread>
 
-#ifdef WIN32
+#ifdef _WIN64
 #include <atlstr.h>
 #endif
 

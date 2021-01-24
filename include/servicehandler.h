@@ -2,7 +2,7 @@
 
 #include "service.h"
 
-#ifdef WIN32
+#ifdef _WIN64
 class ServiceHandler
 {
 public:

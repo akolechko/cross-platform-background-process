@@ -1,6 +1,6 @@
 #pragma once
 
-#ifdef WIN32
+#ifdef _WIN64
 struct ServiceParameters
 {
     const CString& name         = "CrossPlatformBackgroundProcess";
@@ -14,7 +14,7 @@ struct ServiceParameters
 class Service
 {
 public:
-#ifdef WIN32
+#ifdef _WIN64
     explicit Service(const ServiceParameters& parameters);
 #elif linux
     explicit Service();
@@ -26,7 +26,7 @@ public:
     Service(Service&& other) = delete;
     Service& operator=(Service&& other) = delete;
 
-#ifdef WIN32
+#ifdef _WIN64
     const CString& GetName() const;
     const CString& GetDisplayName() const;
     const DWORD GetStartType() const;
@@ -40,7 +40,7 @@ private:
     static Service* m_service;
     bool m_isRunning;
     static void SignalHandler(int signal);
-#ifdef WIN32
+#ifdef _WIN64
     static DWORD WINAPI ServiceCtrlHandler(
         DWORD control_code, 
         DWORD event_type,

@@ -3,7 +3,7 @@
 namespace Utils
 {
     
-#ifdef WIN32
+#ifdef _WIN64
 void DisplayError(const std::string& message);
 #endif
 void DisplayMessage(const std::string& message);

@@ -12,7 +12,7 @@ CommandLineHandler::CommandLineHandler(int argc, char** argv)
 
 bool CommandLineHandler::Parse()
 {
-#ifdef WIN32
+#ifdef _WIN64
     ServiceParameters parameters;
     auto service = std::make_unique<Service>(parameters);
     auto service_handler = std::make_unique<ServiceHandler>(std::move(service));

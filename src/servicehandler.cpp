@@ -3,7 +3,7 @@
 #include "servicehandler.h"
 #include "utils.h"
 
-#ifdef WIN32
+#ifdef _WIN64
 class ServiceHandle
 {
 public:
